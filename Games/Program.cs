@@ -32,7 +32,7 @@ namespace Games
                         new Game() 
                         {
                             Id = 3,
-                            Name = "Project Zomboids",
+                            Name = "Project Zomboid",
                             Genre = "Survival",
                             Price = 18M,
                             ReleaseDate = new DateTime(2012, 05, 31),
