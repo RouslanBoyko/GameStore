@@ -20,7 +20,7 @@ namespace Games
                         },
 
                         new Game()
-                        { 
+                        {
                             Id = 2,
                             Name = "The Elder Scrolls V: Skyrim",
                             Genre = "Rpg",
@@ -29,7 +29,7 @@ namespace Games
                             ImageUri = "https://placehold.co/100"
                         },
 
-                        new Game() 
+                        new Game()
                         {
                             Id = 3,
                             Name = "Project Zomboid",
@@ -47,6 +47,13 @@ namespace Games
             var app = builder.Build();
 
             app.MapGet("/games", () => games);
+            app.MapGet("/games/{id}", (int id) =>
+            {
+                Game? game = games.Find(g => g.Id == id);
+
+                if (game == null) return Results.NotFound();
+                return Results.Ok(game);
+            });
 
             app.Run();
         }
