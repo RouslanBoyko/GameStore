@@ -44,22 +44,23 @@ namespace Games
 
             var builder = WebApplication.CreateBuilder(args);
             var app = builder.Build();
+            var group = app.MapGroup("/games");
 
             #region endpoints
             // GET all the games 
-            app.MapGet("/games", () => games);
+            group.MapGet("/", () => games);
 
             // GET games By Id with verification if it exists
-            app.MapGet("/games/{id}", (int id) =>
+            group.MapGet("/{id}", (int id) =>
             {
                 Game? game = games.Find(g => g.Id == id);
 
-                if (game == null) return Results.NotFound();
-                else return Results.Ok(game);
+                if (game is null) return Results.NotFound();
+                return Results.Ok(game);
             }).WithName(GetGameEndPointName);
 
             // POST for creating a new game
-            app.MapPost("/games", (Game game) =>
+            group.MapPost("/", (Game game) =>
             {
                 game.Id = games.Max(g => g.Id) + 1;
                 games.Add(game);
@@ -68,14 +69,11 @@ namespace Games
             });
 
             // PUT Update an existing game by ID
-            app.MapPut("/games/{id}", (int id, Game updatedGame) =>
+            group.MapPut("/{id}", (int id, Game updatedGame) =>
             {
                 Game? existingGame = games.Find(g => g.Id == id);
 
-                if (existingGame == null)
-                {
-                    return Results.NotFound();
-                }
+                if (existingGame is null) return Results.NotFound();
 
                 // Update the existing game with the new data
                 existingGame.Name = updatedGame.Name;
@@ -84,27 +82,23 @@ namespace Games
                 existingGame.ReleaseDate = updatedGame.ReleaseDate;
                 existingGame.ImageUri = updatedGame.ImageUri;
 
-                return Results.Ok(existingGame);
-            });
-
-            // Delete a game by ID
-            app.MapDelete("/games/{id}", (int id) =>
-            {
-                Game? gameToRemove = games.Find(g => g.Id == id);
-
-                if (gameToRemove == null)
-                {
-                    return Results.NotFound();
-                }
-
-                games.Remove(gameToRemove);
-
                 return Results.NoContent();
             });
 
+            // Delete a game by ID
+            group.MapDelete("/{id}", (int id) =>
+            {
+                Game? gameToRemove = games.Find(g => g.Id == id);
+
+                if (gameToRemove is not null)
+                {
+                    games.Remove(gameToRemove);
+                    return Results.NoContent();
+                }
+                return Results.NotFound();
+         
+            });
             #endregion
-
-
 
             app.Run();
         }
