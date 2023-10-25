@@ -45,26 +45,67 @@ namespace Games
             var builder = WebApplication.CreateBuilder(args);
             var app = builder.Build();
 
-            // get all the games endpoint
+            #region endpoints
+            // GET all the games 
             app.MapGet("/games", () => games);
 
-            // get games By Id endpoint
+            // GET games By Id with verification if it exists
             app.MapGet("/games/{id}", (int id) =>
             {
                 Game? game = games.Find(g => g.Id == id);
 
                 if (game == null) return Results.NotFound();
-                return Results.Ok(game);
+                else return Results.Ok(game);
             }).WithName(GetGameEndPointName);
 
-            // post for creating a new game
-            app.MapPost("/games", (Game game) => 
+            // POST for creating a new game
+            app.MapPost("/games", (Game game) =>
             {
                 game.Id = games.Max(g => g.Id) + 1;
                 games.Add(game);
 
                 return Results.CreatedAtRoute(GetGameEndPointName, new { id = game.Id }, game);
             });
+
+            // PUT Update an existing game by ID
+            app.MapPut("/games/{id}", (int id, Game updatedGame) =>
+            {
+                Game? existingGame = games.Find(g => g.Id == id);
+
+                if (existingGame == null)
+                {
+                    return Results.NotFound();
+                }
+
+                // Update the existing game with the new data
+                existingGame.Name = updatedGame.Name;
+                existingGame.Genre = updatedGame.Genre;
+                existingGame.Price = updatedGame.Price;
+                existingGame.ReleaseDate = updatedGame.ReleaseDate;
+                existingGame.ImageUri = updatedGame.ImageUri;
+
+                return Results.Ok(existingGame);
+            });
+
+            // Delete a game by ID
+            app.MapDelete("/games/{id}", (int id) =>
+            {
+                Game? gameToRemove = games.Find(g => g.Id == id);
+
+                if (gameToRemove == null)
+                {
+                    return Results.NotFound();
+                }
+
+                games.Remove(gameToRemove);
+
+                return Results.NoContent();
+            });
+
+            #endregion
+
+
+
             app.Run();
         }
     }
