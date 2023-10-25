@@ -56,8 +56,13 @@ namespace Games.EndPoints
             {
                 Game? gameToRemove = repository.GetById(id);
 
-                return gameToRemove is not null ? Results.Ok(gameToRemove) : Results.NotFound();
-             
+                if (gameToRemove is not null)
+                {
+                    repository.Delete(id);
+                    return Results.NoContent();
+                }
+                return Results.NotFound();
+
 
             });
             #endregion
