@@ -3,7 +3,8 @@ using System.Collections.Generic;
 
 namespace Games.Repositories
 {
-    public class InMemGamesRepository
+
+    public class InMemGamesRepository : IGamesRepository
     {
         private readonly List<Game> games = new()
             {
@@ -49,7 +50,7 @@ namespace Games.Repositories
         {
             return games.Find(game => game.Id == id);
         }
-        
+
         public void Create(Game game)
         {
             game.Id = games.Max(game => game.Id) + 1;

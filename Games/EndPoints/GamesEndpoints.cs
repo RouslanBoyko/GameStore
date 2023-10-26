@@ -9,17 +9,17 @@ namespace Games.EndPoints
         
         public static RouteGroupBuilder MapGamesEndpoints(this IEndpointRouteBuilder routes)
         {
-            InMemGamesRepository repository = new ();
+            
 
             var group = routes.MapGroup("/games")
                               .WithParameterValidation();
 
             #region endpoints
             // GET all the games 
-            group.MapGet("/", () => repository.GetAll());
+            group.MapGet("/", (IGamesRepository repository) => repository.GetAll());
 
             // GET games By Id with verification if it exists
-            group.MapGet("/{id}", (int id) =>
+            group.MapGet("/{id}", (IGamesRepository repository, int id) =>
             {
                 Game? game = repository.GetById(id);
                 return game is not null ? Results.Ok(game) : Results.NotFound();
@@ -27,14 +27,14 @@ namespace Games.EndPoints
             }).WithName(GetGameEndPointName);
 
             // POST for creating a new game
-            group.MapPost("/", (Game game) =>
+            group.MapPost("/", (IGamesRepository repository, Game game) =>
             {
                 repository.Create(game);
                 return Results.CreatedAtRoute(GetGameEndPointName, new { id = game.Id }, game);
             });
 
             // PUT Update an existing game by ID
-            group.MapPut("/{id}", (int id, Game updatedGame) =>
+            group.MapPut("/{id}", (IGamesRepository repository, int id, Game updatedGame) =>
             {
                 Game? existingGame = repository.GetById(id);
 
@@ -52,7 +52,7 @@ namespace Games.EndPoints
             });
 
             // Delete a game by ID
-            group.MapDelete("/{id}", (int id) =>
+            group.MapDelete("/{id}", (IGamesRepository repository, int id) =>
             {
                 Game? gameToRemove = repository.GetById(id);
 
