@@ -10,4 +10,12 @@
     <PackageReference Include="MinimalApis.Extensions" Version="0.11.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <EditorConfigFiles Remove="C:\Users\rousl\source\repos\GameStore\Games\.editorconfig" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="C:\Users\rousl\source\repos\GameStore\Games\.editorconfig" />
+  </ItemGroup>
+
 </Project>

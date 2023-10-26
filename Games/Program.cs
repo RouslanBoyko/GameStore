@@ -1,5 +1,4 @@
 using Games.EndPoints;
-using Games.Entities;
 using Games.Repositories;
 
 namespace Games;

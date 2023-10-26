@@ -16,7 +16,7 @@ public class Game
     public required string Genre { get; set; }
 
     [Required]
-    [Range(1,100)] 
+    [Range(1, 100)]
     public required decimal Price { get; set; }
     public DateTime ReleaseDate { get; set; }
 
