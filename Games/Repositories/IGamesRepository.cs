@@ -4,9 +4,9 @@ namespace Games.Repositories;
 
 public interface IGamesRepository
 {
-    void Create(Game game);
-    void Delete(int id);
-    IEnumerable<Game> GetAll();
-    Game? GetById(int id);
-    void Update(Game updatedGame);
+    Task<IEnumerable<Game>> GetAllAsync();
+    Task<Game?> GetByIdAsync(int id);
+    Task CreateAsync(Game game);
+    Task UpdateAsync(Game updatedGame);
+    Task DeleteAsync(int id);
 }
