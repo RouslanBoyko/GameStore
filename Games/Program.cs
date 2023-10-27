@@ -1,6 +1,7 @@
 using Games.Data;
 using Games.EndPoints;
 using Games.Repositories;
+using Microsoft.EntityFrameworkCore;
 
 namespace Games;
 
@@ -16,6 +17,9 @@ public class Program
         builder.Services.AddSqlServer<GameStoreContext>(connString);
 
         var app = builder.Build();
+
+
+        app.Services.InitializeDb();
         app.MapGamesEndpoints();
         app.Run();
     }
